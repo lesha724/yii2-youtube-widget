@@ -1,0 +1,21 @@
+{
+    "name": "lesha724/yii2-youtube-widget",
+    "description": "yii2-youtube-widget",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","youtube"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "lesha724",
+            "email": "neff.alexey@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "lesha724\\youtubewidget\\": ""
+        }
+    }
+}
