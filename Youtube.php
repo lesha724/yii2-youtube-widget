@@ -85,9 +85,13 @@ JS;
      */
     public $events = [];
     /*
-     * @var array опцыи для контейнера
+     * @var array опцыи для контейнера div
      */
-    public $options = [];
+    public $divOptions = [];
+    /*
+     * @var array опцыи для контейнера iframe
+     */
+    public $iframeOptions = [];
 
     /**
      * @var bool|string $_videoId youtube video id
@@ -161,11 +165,14 @@ JS;
                     [
                         'id' => 'div_'.$this->id
                     ],
-                    $this->options
+                    $this->iframeOptions
                 )),
-                [
-                    'id' => $this->id
-                ]
+                ArrayHelper::merge(
+                    [
+                        'id' => $this->id
+                    ],
+                    $this->divOptions
+                )
             );
 
         return $html;

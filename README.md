@@ -29,7 +29,13 @@ Once the extension is installed, simply use it in your code by  :
 
 ```php
 <?= Youtube::widget([
-       'video'=>'https://www.youtube.com/watch?v=CP2vruvuEQY',
+        'video'=>'https://www.youtube.com/watch?v=CP2vruvuEQY',
+        'iframeOptions'=>[ /*for container iframe*/
+            'class'=>'youtube-video'
+        ],
+        'divOptions'=>[ /*for container div*/
+            'class'=>'youtube-video-div'
+        ],
         'height'=>390,
         'width'=>640,
         'playerVars'=>[
@@ -62,7 +68,7 @@ Once the extension is installed, simply use it in your code by  :
             'disablekb'=>0
         ],
         'events'=>[
-            /*https://developers.google.com/youtube/iframe_api_reference?hl=ru*/
+
         ]
     ]); ?>
 ```
