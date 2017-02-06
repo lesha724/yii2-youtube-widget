@@ -4,6 +4,7 @@ namespace lesha724\youtubewidget;
 use conquer\helpers\Json;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\JsExpression;
 use yii\web\View;
 
 /**
@@ -133,7 +134,19 @@ JS;
         $settings = $this->_mergeSettings($this->_defaultSettings);
 
         $_settingsStr = Json::encode($settings);
-        $_eventsStr = !(empty($this->events))?'events: '.Json::encode($this->events):'';
+
+        //$_eventsStr = !(empty($this->events))?'events: '.Json::encode($this->events):'';
+        $_eventsStr = '';
+        if(!empty($this->events)) {
+            $_eventsStr = 'events: {';
+            foreach ($this->events as $name => $event) {
+                $_function = new JsExpression($event);
+
+                $_eventsStr .= "$name : $_function,";
+            }
+
+            $_eventsStr .= '}';
+        }
 
         $_playerId = 'player_'.$this->id;
 

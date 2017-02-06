@@ -68,7 +68,11 @@ Once the extension is installed, simply use it in your code by  :
             'disablekb'=>0
         ],
         'events'=>[
-
+            /*https://developers.google.com/youtube/iframe_api_reference?hl=ru*/
+            'onReady'=> 'function (event){
+                        /*The API will call this function when the video player is ready*/
+                        event.target.playVideo();
+            }',
         ]
     ]); ?>
 ```
