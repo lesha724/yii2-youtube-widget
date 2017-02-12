@@ -99,10 +99,22 @@ JS;
      */
     protected $_videoId = false;
 
+    /**
+     * получить id video (проверка являеться ли ссылкой или сразу уже айди)
+     * @return string
+     */
+    protected function _getVideoId(){
+        if(filter_var($this->video, FILTER_VALIDATE_URL)!== false){
+            return $this->_getVideoIdByUrl($this->video);
+        }else{
+            return $this->video;
+        }
+    }
+
     public function init()
     {
         parent::init();
-        $this->_videoId = $this->_getVideoIdByUrl($this->video);
+        $this->_videoId = $this->_getVideoId();
     }
 
     public function run()

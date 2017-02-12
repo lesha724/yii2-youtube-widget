@@ -30,6 +30,10 @@ Once the extension is installed, simply use it in your code by  :
 ```php
 <?= Youtube::widget([
         'video'=>'https://www.youtube.com/watch?v=CP2vruvuEQY',
+        /*
+            or you can use
+            'video'=>'CP2vruvuEQY',
+        */
         'iframeOptions'=>[ /*for container iframe*/
             'class'=>'youtube-video'
         ],
