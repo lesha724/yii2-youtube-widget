@@ -1,7 +1,7 @@
 <?php
 
 namespace lesha724\youtubewidget;
-use conquer\helpers\Json;
+use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\JsExpression;
