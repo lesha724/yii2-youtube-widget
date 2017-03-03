@@ -12,21 +12,21 @@ use yii\web\View;
  */
 class Youtube extends \yii\base\Widget
 {
+    const ID_JS = 'YoutubeAPIReady';
+    const POS_JS = View::POS_HEAD;
+    const START_JS = "function onYouTubePlayerAPIReady() {";
     /**
      *  @link  https://developers.google.com/youtube/iframe_api_reference?hl=ru
      *  шаблон скпирта
      */
     const JS_SCRIPT = <<<JS
-        var __player_id__;
-        function onYouTubeIframeAPIReady() {
-            __player_id__ = new YT.Player('__div_id__', {
+        __player_id__ = new YT.Player('__div_id__', {
                 height: '%s',
                 width: '%s',
                 videoId: '%s',
                 playerVars:%s,
                 /*events*/%s
             });
-        }
 JS;
 
     /**
@@ -98,6 +98,10 @@ JS;
      * @var bool|string $_videoId youtube video id
      */
     protected $_videoId = false;
+    /**
+     * @var string 
+     */
+    private $_playerId;
 
     /**
      * получить id video (проверка являеться ли ссылкой или сразу уже айди)
@@ -115,6 +119,7 @@ JS;
     {
         parent::init();
         $this->_videoId = $this->_getVideoId();
+        $this->_playerId = 'player_'.$this->id;
     }
 
     public function run()
@@ -126,6 +131,23 @@ JS;
         $view = $this->getView();
         YoutubeAsset::register($view);
         return $this->_runWidget();
+    }
+
+    /*
+     * Merge script for many players
+     */
+    protected function addJs($js) {
+        $script = $this->view->js[self::POS_JS][self::ID_JS];
+        $new_script = str_replace(self::START_JS, self::START_JS . ' ' . $js, $script);
+        return $new_script;
+    }
+    /*
+     * check setting
+     */
+    protected function checkSettings() {
+        if(!$this->video){
+            throw new InvalidParamException('Empty video indentificator.');
+        }
     }
 
     /*
@@ -160,7 +182,7 @@ JS;
             $_eventsStr .= '}';
         }
 
-        $_playerId = 'player_'.$this->id;
+        $_playerId = $this->_playerId;
 
         $_script = sprintf(
             self::JS_SCRIPT,
@@ -175,15 +197,27 @@ JS;
         $_script = str_replace('__div_id__', 'div_'.$this->id, $_script);
 
         $view = $this->getView();
-        $view->registerJs($_script, View::POS_HEAD);
+
+        $script = '';
+        if(!isset($this->view->js[self::POS_JS][self::ID_JS])) {
+            $script .= self::START_JS . $_script;
+            $script .= "}";
+        } else {
+            $script = $this->addJs($_script);
+        }
+        $view->registerJs($script, View::POS_HEAD, self::ID_JS);
     }
     /**
      * Вывод виджета
      * @return string html widget
      */
     protected function _runWidget() {
-        $this->_registerJs();
 
+        $js = "var " . $this->_playerId .";";
+        $this->getView()->registerJs($js, View::POS_HEAD);
+
+        $this->_registerJs();
+        
         $html =
             Html::tag('div',
                 Html::tag('div', '', ArrayHelper::merge(
