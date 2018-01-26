@@ -14,6 +14,13 @@ class Youtube extends \yii\base\Widget
 {
     const ID_JS = 'YoutubeAPIReady';
     const POS_JS = View::POS_HEAD;
+    const ASYNC_SCRIPT_JS = <<<JS
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+JS;
+
     const START_JS = "function onYouTubePlayerAPIReady() {";
     /**
      *  @link  https://developers.google.com/youtube/iframe_api_reference?hl=ru
@@ -128,8 +135,6 @@ JS;
             $html = Html::tag('div', \Yii::t('yii','Error'));
             return $html;
         }
-        $view = $this->getView();
-        YoutubeAsset::register($view);
         return $this->_runWidget();
     }
 
@@ -200,7 +205,7 @@ JS;
 
         $script = '';
         if(!isset($this->view->js[self::POS_JS][self::ID_JS])) {
-            $script .= self::START_JS . $_script;
+            $script .= self::ASYNC_SCRIPT_JS .self::START_JS . $_script;
             $script .= "}";
         } else {
             $script = $this->addJs($_script);
